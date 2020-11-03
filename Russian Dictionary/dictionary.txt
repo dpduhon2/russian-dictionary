@@ -1,0 +1,36 @@
+<dictionary>
+	<noun>
+		<dictionary-form>кошка</dictionary-form>
+		<translation>cat</translation>
+		<gender>feminine</gender>
+		<nominative>
+			<singular>кошка</singular>
+			<plural>кошки</plural>
+		</nominative>
+	</noun>
+	<verb>
+		<dictionary-form>знать</dictionary-form>
+		<translation>to know</translation>
+		<infinitive>знать</infinitive>
+		<present-tense>
+			<first-person-singular>знаю</first-person-singular>
+			<second-person-singular>знаешь</second-person-singular>
+			<third-person-singular>знает</third-person-singular>
+			<first-person-plural>знаем</first-person-plural>
+			<second-person-plural>знаете</second-person-plural>
+			<third-person-plural>знают</third-person-plural>
+		</present-tense>
+	</verb>
+	<noun>
+		<dictionary-form>утка</dictionary-form>
+		<translation>duck</translation>
+		<gender>feminine</gender>
+		<nominative>
+			<singular>утка</singular>
+			<plural>утки</plural>
+		</nominative>
+		<accusative>
+			<singular>утку</singular>
+		</accusative>
+	</noun>
+</dictionary>
