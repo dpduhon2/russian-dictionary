@@ -172,6 +172,7 @@ void update_noun(Noun& n) {
 	menu.add_option(L'g', L"to update the gender");
 	menu.add_option(L'n', L"to update the nominative case");
 	menu.add_option(L'a', L"to update the accusative case");
+	menu.add_option(L't', L"to update the genitive case");
 	menu.add_option(L'e', L"to exit");
 
 	while (true) {
@@ -184,6 +185,9 @@ void update_noun(Noun& n) {
 			break;
 		case L'a':
 			update_noun_case(n.accusative);
+			break;
+		case L't':
+			update_noun_case(n.genitive);
 			break;
 		case L'e':
 			return;

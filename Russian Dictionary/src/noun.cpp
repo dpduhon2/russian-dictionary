@@ -6,7 +6,10 @@
 
 Noun::Noun() :
 	Word{ PartOfSpeech::noun },
-	gender{ Gender::neuter }
+	gender{ Gender::neuter },
+	nominative{ L"nominative" },
+	accusative{ L"accusative" },
+	genitive{ L"genitive" }
 {}
 Noun::Noun(const XMLNodeUTF8& node) : Noun{} {
 	for (const XMLNodeUTF8& attribute : node.children) {
@@ -23,9 +26,9 @@ Noun::Noun(const XMLNodeUTF8& node) : Noun{} {
 				gender = Noun::Gender::neuter;
 		}
 		else if (attribute.tag == L"nominative")
-			update_case_from_xml_node(attribute, nominative);
+			nominative.update_from_node(attribute);
 		else if (attribute.tag == L"accusative")
-			update_case_from_xml_node(attribute, accusative);
+			accusative.update_from_node(attribute);
 	}
 }
 
@@ -33,10 +36,7 @@ bool Noun::contains(const std::wstring& word) const {
 	return has_form(word) || translation_contains(word);
 }
 bool Noun::has_form(const std::wstring& word) const {
-	return dictionary_form == word || case_contains(nominative, word) || case_contains(accusative, word);
-}
-bool Noun::translation_contains(const std::wstring& word) const {
-	return translation.find(word) != std::wstring::npos;
+	return dictionary_form == word || nominative.contains(word) || accusative.contains(word);
 }
 
 void Noun::print() const {
@@ -70,23 +70,33 @@ void Noun::print() const {
 	std::wcout << std::endl;
 	std::wcout << std::endl;
 
-	std::wcout << L'\t' << std::setw(6) << L' ';
-	std::wcout << std::left << std::setw(singular_column_width) << L"sing.";
-	std::wcout << std::left << std::setw(plural_column_width) << L"plur." << std::endl;
+	if (!(nominative.is_empty() && accusative.is_empty())) {
+		std::wcout << L'\t' << std::setw(6) << L' ';
+		std::wcout << std::left << std::setw(singular_column_width) << L"sing.";
+		std::wcout << std::left << std::setw(plural_column_width) << L"plur." << std::endl;
+	}
+	
+	if (!nominative.is_empty()) {
+		std::wcout << L'\t';
+		std::wcout << std::right << std::setw(6) << L"nom.  ";
+		std::wcout << std::left << std::setw(singular_column_width) << nominative.singular;
+		std::wcout << std::left << std::setw(plural_column_width) << nominative.plural << std::endl;
+	}
 
-	std::wcout << L'\t';
-	std::wcout << std::right << std::setw(6) << L"nom.  ";
-	std::wcout << std::left << std::setw(singular_column_width) << nominative.singular;
-	std::wcout << std::left << std::setw(plural_column_width) << nominative.plural << std::endl;
+	if (!accusative.is_empty()) {
+		std::wcout << L'\t';
+		std::wcout << std::right << std::setw(6) << L"acc.  ";
+		std::wcout << std::left << std::setw(singular_column_width) << accusative.singular;
+		std::wcout << std::left << std::setw(plural_column_width) << accusative.plural << std::endl;
+	}
+	
+	if (!genitive.is_empty()) {
+		std::wcout << L'\t';
+		std::wcout << std::right << std::setw(6) << L"gen.  ";
+		std::wcout << std::left << std::setw(singular_column_width) << genitive.singular;
+		std::wcout << std::left << std::setw(plural_column_width) << genitive.plural << std::endl;
+	}
 
-	std::wcout << L'\t';
-	std::wcout << std::right << std::setw(6) << L"acc.  ";
-	std::wcout << std::left << std::setw(singular_column_width) << accusative.singular;
-	std::wcout << std::left << std::setw(plural_column_width) << accusative.plural << std::endl;
-
-	return;
-}
-void Noun::edit_entry() {
 	return;
 }
 XMLNodeUTF8 Noun::create_xml_node() const {
@@ -117,38 +127,50 @@ XMLNodeUTF8 Noun::create_xml_node() const {
 	}
 	entry.children.push_back(g);
 
-	XMLNodeUTF8 n{ create_case_node(nominative, L"nominative") };
+	XMLNodeUTF8 n{ nominative.create_node() };
 	if (n.children.size() != 0) entry.children.push_back(n);
-	XMLNodeUTF8 a{ create_case_node(accusative, L"accusative") };
+	XMLNodeUTF8 a{ accusative.create_node() };
 	if (a.children.size() != 0) entry.children.push_back(a);
+	XMLNodeUTF8 g{ genitive.create_node() };
+	if (g.children.size() != 0) entry.children.push_back(a);
 
 	return entry;
 }
 
-bool Noun::case_contains(const Case& c, const std::wstring& word) const {
-	return c.singular == word || c.plural == word;
+Noun::Case::Case(const std::wstring& name_) :
+	name{ name_ }
+{}
+
+void Noun::Case::print() const {
+	return;
+}
+bool Noun::Case::is_empty() const {
+	return singular == L"" && plural == L"";
+}
+bool Noun::Case::contains(const std::wstring& word) const {
+	return singular == word || plural == word;
 }
 
-void Noun::update_case_from_xml_node(const XMLNodeUTF8& case_node, Case& noun_case) {
-	for (const XMLNodeUTF8& form : case_node.children) {
+void Noun::Case::update_from_node(const XMLNodeUTF8& node) {
+	for (const XMLNodeUTF8& form : node.children) {
 		if (form.tag == L"singular")
-			noun_case.singular = form.contents;
+			singular = form.contents;
 		else if (form.tag == L"plural")
-			noun_case.plural = form.contents;
+			plural = form.contents;
 	}
 	return;
 }
-XMLNodeUTF8 Noun::create_case_node(const Case& case_, const std::wstring& name) const {
+XMLNodeUTF8 Noun::Case::create_node() const {
 	XMLNodeUTF8 c{ name };
 
-	if (case_.singular != L"") {
+	if (singular != L"") {
 		XMLNodeUTF8 s{ L"singular" };
-		s.contents = case_.singular;
+		s.contents = singular;
 		c.children.push_back(s);
 	}
-	if (case_.plural != L"") {
+	if (plural != L"") {
 		XMLNodeUTF8 p{ L"plural" };
-		p.contents = case_.plural;
+		p.contents = plural;
 		c.children.push_back(p);
 	}
 

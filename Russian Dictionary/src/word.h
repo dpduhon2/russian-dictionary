@@ -19,13 +19,11 @@ public:
 	std::wstring translation;
 
 	void print_preview() const;
+	bool translation_contains(const std::wstring& word) const;
 
 	virtual bool contains(const std::wstring& word) const = 0;
 	virtual bool has_form(const std::wstring& word) const = 0;
-	virtual bool translation_contains(const std::wstring& word) const = 0;
-
 	virtual void print() const = 0;
-	virtual void edit_entry() = 0;
 	virtual XMLNodeUTF8 create_xml_node() const = 0;
 };
 bool operator<(const Word& w_1, const Word& w_2);

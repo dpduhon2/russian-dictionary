@@ -5,7 +5,8 @@
 #include "xml_node.h"
 
 Verb::Verb() :
-	Word{ PartOfSpeech::verb }
+	Word{ PartOfSpeech::verb },
+	present{ L"present" }
 {}
 Verb::Verb(const XMLNodeUTF8& node) : Verb{} {
 	for (const XMLNodeUTF8& attribute : node.children) {
@@ -16,7 +17,7 @@ Verb::Verb(const XMLNodeUTF8& node) : Verb{} {
 		else if (attribute.tag == L"infinitive")
 			infinitive = attribute.contents;
 		else if (attribute.tag == L"present-tense")
-			update_tense_from_xml_node(attribute, present);
+			present.update_from_node(attribute);
 	}
 }
 
@@ -24,7 +25,7 @@ bool Verb::contains(const std::wstring& word) const {
 	return has_form(word) || translation_contains(word);
 }
 bool Verb::has_form(const std::wstring& word) const {
-	return dictionary_form == word || infinitive == word || tense_contains(present, word);
+	return dictionary_form == word || infinitive == word || present.contains(word);
 }
 bool Verb::translation_contains(const std::wstring& word) const {
 	return translation.find(word) != std::wstring::npos;
@@ -37,7 +38,7 @@ void Verb::print() const {
 	std::wcout << std::endl;
 
 	std::wcout << L"\tpresent" << std::endl;
-	print_tense(present);
+	present.print();
 
 	return;
 }
@@ -62,33 +63,28 @@ XMLNodeUTF8 Verb::create_xml_node() const {
 		i.contents = infinitive;
 		entry.children.push_back(i);
 	}
-	XMLNodeUTF8 present_node{ create_tense_node(present, L"present-tense") };
+	XMLNodeUTF8 present_node{ present.create_node() };
 	if (present_node.children.size() != 0) entry.children.push_back(present_node);
 
 	return entry;
 }
 
-bool Verb::tense_contains(const Tense& tense, const std::wstring& word) const {
-	return tense.first_person_singular == word
-		|| tense.second_person_singular == word
-		|| tense.third_person_singular == word
-		|| tense.first_person_plural == word
-		|| tense.second_person_plural == word
-		|| tense.third_person_plural == word;
-}
+Verb::Tense::Tense(const std::wstring& name_) :
+	name{ name_ }
+{}
 
-void Verb::print_tense(const Tense& tense) const {
+void Verb::Tense::print() const {
 	int default_width = 6;
 
 	int singular_column_width = default_width;
-	if (tense.first_person_singular.length() + 2 > singular_column_width) singular_column_width = tense.first_person_singular.length() + 2;
-	if (tense.second_person_singular.length() + 2 > singular_column_width) singular_column_width = tense.second_person_singular.length() + 2;
-	if (tense.third_person_singular.length() + 2 > singular_column_width) singular_column_width = tense.third_person_singular.length() + 2;
+	if (first_person_singular.length()  + 2 > singular_column_width) singular_column_width = first_person_singular.length()  + 2;
+	if (second_person_singular.length() + 2 > singular_column_width) singular_column_width = second_person_singular.length() + 2;
+	if (third_person_singular.length()  + 2 > singular_column_width) singular_column_width = third_person_singular.length()  + 2;
 
 	int plural_column_width = default_width;
-	if (tense.first_person_plural.length() + 2 > singular_column_width) singular_column_width = tense.first_person_plural.length() + 2;
-	if (tense.second_person_plural.length() + 2 > singular_column_width) singular_column_width = tense.second_person_plural.length() + 2;
-	if (tense.third_person_plural.length() + 2 > singular_column_width) singular_column_width = tense.third_person_plural.length() + 2;
+	if (first_person_plural.length()  + 2 > singular_column_width) singular_column_width = first_person_plural.length()  + 2;
+	if (second_person_plural.length() + 2 > singular_column_width) singular_column_width = second_person_plural.length() + 2;
+	if (third_person_plural.length()  + 2 > singular_column_width) singular_column_width = third_person_plural.length()  + 2;
 
 	std::wcout << L'\t' << std::setw(4) << L' ';
 	std::wcout << std::left << std::setw(singular_column_width) << L"sing.";
@@ -96,79 +92,88 @@ void Verb::print_tense(const Tense& tense) const {
 
 	std::wcout << L'\t';
 	std::wcout << std::right << std::setw(4) << L"1p  ";
-	std::wcout << std::left << std::setw(singular_column_width) << present.first_person_singular;
-	std::wcout << std::left << std::setw(plural_column_width) << present.first_person_plural << std::endl;
+	std::wcout << std::left << std::setw(singular_column_width) << first_person_singular;
+	std::wcout << std::left << std::setw(plural_column_width)   << first_person_plural << std::endl;
 
 	std::wcout << L'\t';
 	std::wcout << std::right << std::setw(4) << L"2p  ";
-	std::wcout << std::left << std::setw(singular_column_width) << present.second_person_singular;
-	std::wcout << std::left << std::setw(plural_column_width) << present.second_person_plural << std::endl;
+	std::wcout << std::left << std::setw(singular_column_width) << second_person_singular;
+	std::wcout << std::left << std::setw(plural_column_width)   << second_person_plural << std::endl;
 
 	std::wcout << L'\t';
 	std::wcout << std::right << std::setw(4) << L"3p  ";
-	std::wcout << std::left << std::setw(singular_column_width) << present.third_person_singular;
-	std::wcout << std::left << std::setw(plural_column_width) << present.third_person_plural << std::endl;
-
-	/* \u044f
-	 * \u0442\u044b
-	 * \u043e\u043d\u043e
-	 * \u043c\u044b
-	 * \u0432\u044b
-	 * \u043e\u043d\u0438
-	 */
+	std::wcout << std::left << std::setw(singular_column_width) << third_person_singular;
+	std::wcout << std::left << std::setw(plural_column_width)   << third_person_plural << std::endl;
 
 	return;
 }
-XMLNodeUTF8 Verb::create_tense_node(const Tense& tense, const std::wstring& name) const {
+bool Verb::Tense::is_empty() const {
+	return first_person_singular  == L""
+		&& second_person_singular == L""
+		&& third_person_singular  == L""
+		&& first_person_plural    == L""
+		&& second_person_plural   == L""
+		&& third_person_plural    == L"";
+}
+bool Verb::Tense::contains(const std::wstring& word) const {
+	return first_person_singular  == word
+		|| second_person_singular == word
+		|| third_person_singular  == word
+		|| first_person_plural    == word
+		|| second_person_plural   == word
+		|| third_person_plural    == word;
+}
+
+void Verb::Tense::update_from_node(const XMLNodeUTF8& node) {
+	for (const XMLNodeUTF8& form : node.children) {
+		if (form.tag == L"first-person-singular")
+			first_person_singular = form.contents;
+		else if (form.tag == L"second-person-singular")
+			second_person_singular = form.contents;
+		else if (form.tag == L"third-person-singular")
+			third_person_singular = form.contents;
+		else if (form.tag == L"first-person-plural")
+			first_person_plural = form.contents;
+		else if (form.tag == L"second-person-plural")
+			second_person_plural = form.contents;
+		else if (form.tag == L"third-person-plural")
+			third_person_plural = form.contents;
+	}
+	return;
+}
+XMLNodeUTF8 Verb::Tense::create_node() const  {
 	XMLNodeUTF8 t{ name };
 
-	if (tense.first_person_singular != L"") {
+	if (first_person_singular != L"") {
 		XMLNodeUTF8 f{ L"first-person-singular" };
-		f.contents = tense.first_person_singular;
+		f.contents = first_person_singular;
 		t.children.push_back(f);
 	}
-	if (tense.second_person_singular != L"") {
+	if (second_person_singular != L"") {
 		XMLNodeUTF8 f{ L"second-person-singular" };
-		f.contents = tense.second_person_singular;
+		f.contents = second_person_singular;
 		t.children.push_back(f);
 	}
-	if (tense.third_person_singular != L"") {
+	if (third_person_singular != L"") {
 		XMLNodeUTF8 f{ L"third-person-singular" };
-		f.contents = tense.third_person_singular;
+		f.contents = third_person_singular;
 		t.children.push_back(f);
 	}
-	if (tense.first_person_plural != L"") {
+	if (first_person_plural != L"") {
 		XMLNodeUTF8 f{ L"first-person-plural" };
-		f.contents = tense.first_person_plural;
+		f.contents = first_person_plural;
 		t.children.push_back(f);
 	}
-	if (tense.second_person_plural != L"") {
+	if (second_person_plural != L"") {
 		XMLNodeUTF8 f{ L"second-person-plural" };
-		f.contents = tense.second_person_plural;
+		f.contents = second_person_plural;
 		t.children.push_back(f);
 	}
-	if (tense.third_person_plural != L"") {
+	if (third_person_plural != L"") {
 		XMLNodeUTF8 f{ L"third-person-plural" };
-		f.contents = tense.third_person_plural;
+		f.contents = third_person_plural;
 		t.children.push_back(f);
 	}
 
 	return t;
-}
-void Verb::update_tense_from_xml_node(const XMLNodeUTF8& tense_node, Tense& tense) {
-	for (const XMLNodeUTF8& form : tense_node.children) {
-		if (form.tag == L"first-person-singular")
-			tense.first_person_singular = form.contents;
-		else if (form.tag == L"second-person-singular")
-			tense.second_person_singular = form.contents;
-		else if (form.tag == L"third-person-singular")
-			tense.third_person_singular = form.contents;
-		else if (form.tag == L"first-person-plural")
-			tense.first_person_plural = form.contents;
-		else if (form.tag == L"second-person-plural")
-			tense.second_person_plural = form.contents;
-		else if (form.tag == L"third-person-plural")
-			tense.third_person_plural = form.contents;
-	}
-	return;
 }

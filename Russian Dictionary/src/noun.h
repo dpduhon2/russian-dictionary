@@ -13,9 +13,22 @@ public:
 		feminine,
 		neuter
 	};
-	struct Case {
+	class Case {
+	public:
+		Case(const std::wstring& name_);
+
 		std::wstring singular;
 		std::wstring plural;
+
+		void print() const;
+		bool is_empty() const;
+		bool contains(const std::wstring& word) const;
+
+		void update_from_node(const XMLNodeUTF8& node);
+		XMLNodeUTF8 create_node() const;
+
+	private:
+		std::wstring name;
 	};
 
 	Noun();
@@ -24,20 +37,13 @@ public:
 	Gender gender;
 	Case nominative;
 	Case accusative;
+	Case genitive;
 
 	bool contains(const std::wstring& word) const;
 	bool has_form(const std::wstring& word) const;
-	bool translation_contains(const std::wstring& word) const;
 
 	void print() const;
-	void edit_entry();
 	XMLNodeUTF8 create_xml_node() const;
-
-private:
-	bool case_contains(const Case& c, const std::wstring& word) const;
-
-	void update_case_from_xml_node(const XMLNodeUTF8& case_node, Case& noun_case);
-	XMLNodeUTF8 create_case_node(const Case& c, const std::wstring& name) const;
 };
 
 #endif

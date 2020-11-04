@@ -8,13 +8,26 @@ class XMLNodeUTF8;
 
 class Verb : public Word {
 public:
-	struct Tense {
+	class Tense {
+	public:
+		Tense(const std::wstring& name_);
+
 		std::wstring first_person_singular;
 		std::wstring second_person_singular;
 		std::wstring third_person_singular;
 		std::wstring first_person_plural;
 		std::wstring second_person_plural;
 		std::wstring third_person_plural;
+
+		void print() const;
+		bool is_empty() const;
+		bool contains(const std::wstring& word) const;
+
+		void update_from_node(const XMLNodeUTF8& node);
+		XMLNodeUTF8 create_node() const;
+
+	private:
+		std::wstring name;
 	};
 
 	Verb();
@@ -30,13 +43,6 @@ public:
 	void print() const;
 	void edit_entry();
 	XMLNodeUTF8 create_xml_node() const;
-
-private:
-	bool tense_contains(const Tense& tense, const std::wstring& word) const;
-
-	void print_tense(const Tense& tense) const;
-	void update_tense_from_xml_node(const XMLNodeUTF8& tense_node, Tense& tense);
-	XMLNodeUTF8 create_tense_node(const Tense& tense, const std::wstring& name) const;
 };
 
 #endif
