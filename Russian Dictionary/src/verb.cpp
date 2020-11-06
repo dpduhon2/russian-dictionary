@@ -8,28 +8,6 @@ Verb::Verb() :
 	Word{ PartOfSpeech::verb },
 	present{ L"present" }
 {}
-Verb::Verb(const XMLNodeUTF8& node) : Verb{} {
-	for (const XMLNodeUTF8& attribute : node.children) {
-		if (attribute.tag == L"dictionary-form")
-			dictionary_form = attribute.contents;
-		else if (attribute.tag == L"translation")
-			translation = attribute.contents;
-		else if (attribute.tag == L"infinitive")
-			infinitive = attribute.contents;
-		else if (attribute.tag == L"present-tense")
-			present.update_from_node(attribute);
-	}
-}
-
-bool Verb::contains(const std::wstring& word) const {
-	return has_form(word) || translation_contains(word);
-}
-bool Verb::has_form(const std::wstring& word) const {
-	return dictionary_form == word || infinitive == word || present.contains(word);
-}
-bool Verb::translation_contains(const std::wstring& word) const {
-	return translation.find(word) != std::wstring::npos;
-}
 
 void Verb::print() const {
 	std::wcout << std::left << std::setw(24) << std::setfill(L'-') << dictionary_form << std::setfill(L' ') << std::endl;
@@ -42,29 +20,52 @@ void Verb::print() const {
 
 	return;
 }
-void Verb::edit_entry() {
-	return;
+bool Verb::contains(const std::wstring& word) const {
+	return has_form(word) || translation_contains(word);
+}
+bool Verb::has_form(const std::wstring& word) const {
+	return dictionary_form == word || infinitive == word || present.contains(word);
+}
+
+void Verb::update_from_xml_node(const XMLNodeUTF8& node) {
+	for (const XMLNodeUTF8& attribute : node.children) {
+		if (attribute.tag == L"dictionary-form")
+			dictionary_form = attribute.contents;
+		else if (attribute.tag == L"translation")
+			translation = attribute.contents;
+		else if (attribute.tag == L"infinitive")
+			infinitive = attribute.contents;
+		else if (attribute.tag == L"present")
+			present.update_from_xml_node(attribute);
+	}
 }
 XMLNodeUTF8 Verb::create_xml_node() const {
-	XMLNodeUTF8 entry{ L"verb" };
+	XMLNodeUTF8 entry;
+	
+	entry.tag = L"verb";
 
 	if (dictionary_form != L"") {
-		XMLNodeUTF8 d{ L"dictionary-form" };
-		d.contents = dictionary_form;
-		entry.children.push_back(d);
+		XMLNodeUTF8 dictionary_form_node;
+		dictionary_form_node.tag = L"dictionary-form";
+		dictionary_form_node.contents = dictionary_form;
+		entry.children.push_back(dictionary_form_node);
 	}
 	if (translation != L"") {
-		XMLNodeUTF8 t{ L"translation" };
-		t.contents = translation;
-		entry.children.push_back(t);
+		XMLNodeUTF8 translation_node;
+		translation_node.tag = L"translation";
+		translation_node.contents = translation;
+		entry.children.push_back(translation_node);
 	}
+
 	if (infinitive != L"") {
-		XMLNodeUTF8 i{ L"infinitive" };
-		i.contents = infinitive;
-		entry.children.push_back(i);
+		XMLNodeUTF8 infinitive_node;
+		infinitive_node.tag = L"infinitive";
+		infinitive_node.contents = infinitive;
+		entry.children.push_back(infinitive_node);
 	}
-	XMLNodeUTF8 present_node{ present.create_node() };
-	if (present_node.children.size() != 0) entry.children.push_back(present_node);
+
+	if (!present.is_empty())
+		entry.children.push_back(present.create_xml_node());
 
 	return entry;
 }
@@ -124,7 +125,7 @@ bool Verb::Tense::contains(const std::wstring& word) const {
 		|| third_person_plural    == word;
 }
 
-void Verb::Tense::update_from_node(const XMLNodeUTF8& node) {
+void Verb::Tense::update_from_xml_node(const XMLNodeUTF8& node) {
 	for (const XMLNodeUTF8& form : node.children) {
 		if (form.tag == L"first-person-singular")
 			first_person_singular = form.contents;
@@ -141,39 +142,46 @@ void Verb::Tense::update_from_node(const XMLNodeUTF8& node) {
 	}
 	return;
 }
-XMLNodeUTF8 Verb::Tense::create_node() const  {
-	XMLNodeUTF8 t{ name };
+XMLNodeUTF8 Verb::Tense::create_xml_node() const  {
+	XMLNodeUTF8 tense_node;
 
+	tense_node.tag = name;
 	if (first_person_singular != L"") {
-		XMLNodeUTF8 f{ L"first-person-singular" };
-		f.contents = first_person_singular;
-		t.children.push_back(f);
+		XMLNodeUTF8 first_person_singular_node;
+		first_person_singular_node.tag = L"first-person-singular";
+		first_person_singular_node.contents = first_person_singular;
+		tense_node.children.push_back(first_person_singular_node);
 	}
 	if (second_person_singular != L"") {
-		XMLNodeUTF8 f{ L"second-person-singular" };
-		f.contents = second_person_singular;
-		t.children.push_back(f);
+		XMLNodeUTF8 second_person_singular_node;
+		second_person_singular_node.tag = L"second-person-singular";
+		second_person_singular_node.contents = second_person_singular;
+		tense_node.children.push_back(second_person_singular_node);
 	}
 	if (third_person_singular != L"") {
-		XMLNodeUTF8 f{ L"third-person-singular" };
-		f.contents = third_person_singular;
-		t.children.push_back(f);
+		XMLNodeUTF8 third_person_singular_node;
+		third_person_singular_node.tag = L"third-person-singular";
+		third_person_singular_node.contents = third_person_singular;
+		tense_node.children.push_back(third_person_singular_node);
 	}
 	if (first_person_plural != L"") {
-		XMLNodeUTF8 f{ L"first-person-plural" };
-		f.contents = first_person_plural;
-		t.children.push_back(f);
+		XMLNodeUTF8 first_person_plural_node;
+		first_person_plural_node.tag = L"first-person-plural";
+		first_person_plural_node.contents = first_person_plural;
+		tense_node.children.push_back(first_person_plural_node);
 	}
 	if (second_person_plural != L"") {
-		XMLNodeUTF8 f{ L"second-person-plural" };
-		f.contents = second_person_plural;
-		t.children.push_back(f);
+		XMLNodeUTF8 second_person_plural_node;
+		second_person_plural_node.tag = L"second-person-plural";
+		second_person_plural_node.contents = second_person_plural;
+		tense_node.children.push_back(second_person_plural_node);
 	}
 	if (third_person_plural != L"") {
-		XMLNodeUTF8 f{ L"third-person-plural" };
-		f.contents = third_person_plural;
-		t.children.push_back(f);
+		XMLNodeUTF8 third_person_plural_node;
+		third_person_plural_node.tag = L"third-person-plural";
+		third_person_plural_node.contents = third_person_plural;
+		tense_node.children.push_back(third_person_plural_node);
 	}
 
-	return t;
+	return tense_node;
 }

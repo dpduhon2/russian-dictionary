@@ -23,25 +23,23 @@ public:
 		bool is_empty() const;
 		bool contains(const std::wstring& word) const;
 
-		void update_from_node(const XMLNodeUTF8& node);
-		XMLNodeUTF8 create_node() const;
+		void update_from_xml_node(const XMLNodeUTF8& node);
+		XMLNodeUTF8 create_xml_node() const;
 
 	private:
 		std::wstring name;
 	};
 
 	Verb();
-	Verb(const XMLNodeUTF8& node);
 
 	std::wstring infinitive;
 	Tense present;
 
+	void print() const;
 	bool contains(const std::wstring& word) const;
 	bool has_form(const std::wstring& word) const;
-	bool translation_contains(const std::wstring& word) const;
 
-	void print() const;
-	void edit_entry();
+	void update_from_xml_node(const XMLNodeUTF8& node);
 	XMLNodeUTF8 create_xml_node() const;
 };
 

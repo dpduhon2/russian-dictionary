@@ -16,10 +16,6 @@ static std::wstring trim_whitespace(const std::wstring& s) {
 	return trimmed;
 }
 
-XMLNodeUTF8::XMLNodeUTF8(const std::wstring& tag_) :
-	tag{ tag_ }
-{}
-
 XMLNodeUTF8* XMLNodeUTF8::get_child(const std::vector<int>& index) {
 	XMLNodeUTF8* current_node = this;
 	for (int i : index) {

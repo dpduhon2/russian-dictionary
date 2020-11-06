@@ -24,25 +24,27 @@ public:
 		bool is_empty() const;
 		bool contains(const std::wstring& word) const;
 
-		void update_from_node(const XMLNodeUTF8& node);
-		XMLNodeUTF8 create_node() const;
+		void update_from_xml_node(const XMLNodeUTF8& node);
+		XMLNodeUTF8 create_xml_node() const;
 
 	private:
 		std::wstring name;
 	};
 
 	Noun();
-	Noun(const XMLNodeUTF8& node);
 
 	Gender gender;
+
 	Case nominative;
 	Case accusative;
 	Case genitive;
+	Case prepositional;
 
+	void print() const;
 	bool contains(const std::wstring& word) const;
 	bool has_form(const std::wstring& word) const;
 
-	void print() const;
+	void update_from_xml_node(const XMLNodeUTF8& node);
 	XMLNodeUTF8 create_xml_node() const;
 };
 

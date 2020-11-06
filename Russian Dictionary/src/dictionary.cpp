@@ -75,22 +75,29 @@ void Dictionary::print(Word::PartOfSpeech part_of_speech) const  {
 }
 
 void Dictionary::load_from_file(const std::string& filename) {
-	XMLNodeUTF8 dictionary_node;
-	dictionary_node.read_from_file(filename);
+	XMLNodeUTF8 file_node;
+	file_node.read_from_file(filename);
 
-	if (dictionary_node.children.at(0).tag != L"dictionary") {
+	XMLNodeUTF8 dictionary_node;
+	if (file_node.children.size() != 0) dictionary_node = file_node.children.at(0);
+
+	if (dictionary_node.tag != L"dictionary") {
 		throw std::exception("The given file does not contain a dictionary");
 	}
 
-	for (const XMLNodeUTF8 word : dictionary_node.children.at(0).children) {
+	for (const XMLNodeUTF8 word : dictionary_node.children) {
 		if (word.tag == L"noun") {
-			Noun* entry = new Noun{ word };
+			Noun* entry = new Noun;
 			if (entry == nullptr) throw std::exception("Unable to create new noun");
+
+			entry->update_from_xml_node(word);
 			words.push_back(entry);
 		}
 		else if (word.tag == L"verb") {
-			Verb* entry = new Verb{ word };
+			Verb* entry = new Verb;
 			if (entry == nullptr) throw std::exception("Unable to create new verb");
+
+			entry->update_from_xml_node(word);
 			words.push_back(entry);
 		}
 		else throw std::exception("Unrecognized part of speech");

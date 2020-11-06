@@ -169,15 +169,16 @@ void present_add_verb_menu(Dictionary& d) {
 
 void update_noun(Noun& n) {
 	MenuUTF8 menu;
-	menu.add_option(L'g', L"to update the gender");
+	menu.add_option(L'r', L"to update the gender");
 	menu.add_option(L'n', L"to update the nominative case");
 	menu.add_option(L'a', L"to update the accusative case");
-	menu.add_option(L't', L"to update the genitive case");
+	menu.add_option(L'g', L"to update the genitive case");
+	menu.add_option(L'p', L"to update the prepositional case");
 	menu.add_option(L'e', L"to exit");
 
 	while (true) {
 		switch (menu.get_user_choice()) {
-		case L'g':
+		case L'r':
 			update_noun_gender(n);
 			break;
 		case L'n':
@@ -186,8 +187,11 @@ void update_noun(Noun& n) {
 		case L'a':
 			update_noun_case(n.accusative);
 			break;
-		case L't':
+		case L'g':
 			update_noun_case(n.genitive);
+			break;
+		case L'p':
+			update_noun_case(n.prepositional);
 			break;
 		case L'e':
 			return;

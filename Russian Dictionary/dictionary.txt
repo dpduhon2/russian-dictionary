@@ -12,27 +12,24 @@
 		<dictionary-form>знать</dictionary-form>
 		<translation>to know</translation>
 		<infinitive>знать</infinitive>
+		<present>
+			<first-person-singular>знаю</first-person-singular>
+			<second-person-singular>знаешь</second-person-singular>
+			<third-person-singular>знает</third-person-singular>
+			<first-person-plural>знаем</first-person-plural>
+			<second-person-plural>знаете</second-person-plural>
+			<third-person-plural>знают</third-person-plural>
+		</present>
 	</verb>
 	<noun>
 		<dictionary-form>утка</dictionary-form>
 		<translation>duck</translation>
 		<gender>feminine</gender>
-		<nominative>
-			<singular>утка</singular>
-			<plural>утки</plural>
-		</nominative>
-		<accusative>
-			<singular>утку</singular>
-		</accusative>
 	</noun>
 	<noun>
 		<dictionary-form>мужчина</dictionary-form>
 		<translation>man</translation>
 		<gender>masculine</gender>
-		<nominative>
-			<singular>мужчина</singular>
-			<plural>мужчины</plural>
-		</nominative>
 	</noun>
 	<verb>
 		<dictionary-form>спать</dictionary-form>
@@ -45,39 +42,36 @@
 		<gender>feminine</gender>
 		<nominative>
 			<singular>женщина</singular>
-			<plural>женщины</plural>
+			<plural>женшины</plural>
 		</nominative>
+		<genitive>
+			<singular>женшины</singular>
+		</genitive>
 	</noun>
 	<noun>
 		<dictionary-form>стол</dictionary-form>
 		<translation>table</translation>
 		<gender>masculine</gender>
-		<nominative>
-			<singular>стол</singular>
-			<plural>столы</plural>
-		</nominative>
 	</noun>
 	<noun>
 		<dictionary-form>книга</dictionary-form>
 		<translation>book</translation>
 		<gender>feminine</gender>
-		<nominative>
-			<singular>книга</singular>
-			<plural>книги</plural>
-		</nominative>
-		<accusative>
-			<singular>книгу</singular>
-		</accusative>
 	</noun>
 	<noun>
 		<dictionary-form>папа</dictionary-form>
 		<translation>dad</translation>
 		<gender>masculine</gender>
+	</noun>
+	<noun>
+		<dictionary-form>парк</dictionary-form>
+		<translation>park</translation>
+		<gender>masculine</gender>
 		<nominative>
-			<singular>папа</singular>
+			<singular>парк</singular>
 		</nominative>
-		<accusative>
-			<singular>папу</singular>
-		</accusative>
+		<prepositional>
+			<singular>парке</singular>
+		</prepositional>
 	</noun>
 </dictionary>

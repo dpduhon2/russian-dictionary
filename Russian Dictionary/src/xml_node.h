@@ -8,8 +8,6 @@ class ofstreamUTF8;
 
 class XMLNodeUTF8 {
 public:
-	XMLNodeUTF8(const std::wstring& tag = L"");
-
 	std::wstring tag;
 	std::wstring contents;
 	std::vector<XMLNodeUTF8> children;

@@ -3,22 +3,71 @@
 		<dictionary-form>кошка</dictionary-form>
 		<translation>cat</translation>
 		<gender>feminine</gender>
-		<nominative>
-			<singular>кошка</singular>
-			<plural>кошки</plural>
-		</nominative>
 	</noun>
 	<verb>
 		<dictionary-form>знать</dictionary-form>
 		<translation>to know</translation>
 		<infinitive>знать</infinitive>
-		<present-tense>
+		<present>
 			<first-person-singular>знаю</first-person-singular>
 			<second-person-singular>знаешь</second-person-singular>
 			<third-person-singular>знает</third-person-singular>
 			<first-person-plural>знаем</first-person-plural>
 			<second-person-plural>знаете</second-person-plural>
 			<third-person-plural>знают</third-person-plural>
-		</present-tense>
+		</present>
 	</verb>
+	<noun>
+		<dictionary-form>утка</dictionary-form>
+		<translation>duck</translation>
+		<gender>feminine</gender>
+	</noun>
+	<noun>
+		<dictionary-form>мужчина</dictionary-form>
+		<translation>man</translation>
+		<gender>masculine</gender>
+	</noun>
+	<verb>
+		<dictionary-form>спать</dictionary-form>
+		<translation>to sleep</translation>
+		<infinitive>спать</infinitive>
+	</verb>
+	<noun>
+		<dictionary-form>женщина</dictionary-form>
+		<translation>woman</translation>
+		<gender>feminine</gender>
+		<nominative>
+			<singular>женщина</singular>
+			<plural>женшины</plural>
+		</nominative>
+		<genitive>
+			<singular>женшины</singular>
+		</genitive>
+	</noun>
+	<noun>
+		<dictionary-form>стол</dictionary-form>
+		<translation>table</translation>
+		<gender>masculine</gender>
+	</noun>
+	<noun>
+		<dictionary-form>книга</dictionary-form>
+		<translation>book</translation>
+		<gender>feminine</gender>
+	</noun>
+	<noun>
+		<dictionary-form>папа</dictionary-form>
+		<translation>dad</translation>
+		<gender>masculine</gender>
+	</noun>
+	<noun>
+		<dictionary-form>парк</dictionary-form>
+		<translation>park</translation>
+		<gender>masculine</gender>
+		<nominative>
+			<singular>парк</singular>
+		</nominative>
+		<prepositional>
+			<singular>парке</singular>
+		</prepositional>
+	</noun>
 </dictionary>
