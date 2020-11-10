@@ -39,6 +39,9 @@
     <ClCompile Include="src\word.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\adjective.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\unicode_io.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\word.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\adjective.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

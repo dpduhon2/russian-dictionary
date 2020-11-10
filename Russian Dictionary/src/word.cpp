@@ -15,6 +15,9 @@ void Word::print_preview() const {
 	case PartOfSpeech::verb:
 		std::wcout << L"verb";
 		break;
+	case PartOfSpeech::adjective:
+		std::wcout << L"adjective";
+		break;
 	}
 	std::wcout << L") - " << translation << std::endl;
 

@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "noun.h"
 #include "verb.h"
+#include "adjective.h"
 
 void present_main_menu(Dictionary& d);
 
@@ -16,15 +17,19 @@ void present_remove_word_menu(Dictionary& d);
 
 void present_add_noun_menu(Dictionary& d);
 void present_add_verb_menu(Dictionary& d);
+void present_add_adjective_menu(Dictionary& d);
 
 void update_noun(Noun& n);
 void update_verb(Verb& v);
+void update_adjective(Adjective& a);
 
 void update_noun_gender(Noun& n);
 void update_noun_case(Noun::Case& c);
 
 void update_verb_infinitive(Verb& v);
 void update_verb_tense(Verb::Tense& t);
+
+void update_adjective_case(Adjective::Case& c);
 
 Word* get_word_from_user(Dictionary& d);
 
@@ -86,6 +91,7 @@ void present_add_word_menu(Dictionary& d) {
 	MenuUTF8 menu;
 	menu.add_option(L'n', L"to add a noun");
 	menu.add_option(L'v', L"to add a verb");
+	menu.add_option(L'a', L"to add an adjective");
 	menu.add_option(L'e', L"to return to the main menu");
 	
 	switch (menu.get_user_choice()) {
@@ -94,6 +100,9 @@ void present_add_word_menu(Dictionary& d) {
 		break;
 	case L'v':
 		present_add_verb_menu(d);
+		break;
+	case L'a':
+		present_add_adjective_menu(d);
 		break;
 	case L'e':
 		return;
@@ -166,6 +175,24 @@ void present_add_verb_menu(Dictionary& d) {
 
 	return;
 }
+void present_add_adjective_menu(Dictionary& d) {
+	std::wstring dictionary_form, translation;
+
+	std::wcout << "Dictionary form: ";
+	std::getline(std::wcin, dictionary_form);
+	std::wcout << "Translation: ";
+	std::getline(std::wcin, translation);
+	std::wcout << std::endl;
+
+	Adjective& adjective = d.add_adjective(dictionary_form, translation);
+	std::wcout << "Added adjective" << std::endl;
+	adjective.print_preview();
+	std::wcout << std::endl;
+
+	update_adjective(adjective);
+
+	return;
+}
 
 void update_noun(Noun& n) {
 	MenuUTF8 menu;
@@ -217,6 +244,25 @@ void update_verb(Verb& v) {
 		}
 	}
 }
+void update_adjective(Adjective& a) {
+	MenuUTF8 menu;
+	menu.add_option(L'n', L"to update the nominative case");
+	menu.add_option(L'a', L"to update the accusative case");
+	menu.add_option(L'e', L"to exit");
+
+	while (true) {
+		switch (menu.get_user_choice()) {
+		case L'n':
+			update_adjective_case(a.nominative);
+			break;
+		case L'a':
+			update_adjective_case(a.accusative);
+			break;
+		case L'e':
+			return;
+		}
+	}
+}
 
 void update_noun_gender(Noun& n) {
 	std::wcout << n.dictionary_form << L": ";
@@ -253,6 +299,9 @@ void update_noun_gender(Noun& n) {
 	return;
 }
 void update_noun_case(Noun::Case& c) {
+	c.print();
+	std::wcout << std::endl;
+
 	std::wstring singular, plural;
 
 	std::wcout << "Singular: ";
@@ -303,6 +352,30 @@ void update_verb_tense(Verb::Tense& t) {
 	t.first_person_plural = (first_person_plural == L"") ? t.first_person_plural : first_person_plural;
 	t.second_person_plural = (second_person_plural == L"") ? t.second_person_plural : second_person_plural;
 	t.third_person_plural = (third_person_plural == L"") ? t.third_person_plural : third_person_plural;
+
+	return;
+}
+
+void update_adjective_case(Adjective::Case& c) {
+	c.print();
+	std::wcout << std::endl;
+
+	std::wstring masculine, feminine, neuter, plural;
+
+	std::wcout << "Masculine: ";
+	std::getline(std::wcin, masculine);
+	std::wcout << "Feminine: ";
+	std::getline(std::wcin, feminine);
+	std::wcout << "Neuter: ";
+	std::getline(std::wcin, neuter);
+	std::wcout << "Plural: ";
+	std::getline(std::wcin, plural);
+	std::wcout << std::endl;
+
+	c.masculine = (masculine == L"") ? c.masculine : masculine;
+	c.feminine = (feminine == L"") ? c.feminine : feminine;
+	c.neuter = (neuter == L"") ? c.neuter : neuter;
+	c.plural = (plural == L"") ? c.plural : plural;
 
 	return;
 }

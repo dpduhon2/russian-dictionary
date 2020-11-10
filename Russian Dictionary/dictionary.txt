@@ -62,6 +62,12 @@
 		<dictionary-form>папа</dictionary-form>
 		<translation>dad</translation>
 		<gender>masculine</gender>
+		<nominative>
+			<singular>папа</singular>
+		</nominative>
+		<genitive>
+			<singular>папы</singular>
+		</genitive>
 	</noun>
 	<noun>
 		<dictionary-form>парк</dictionary-form>
@@ -74,4 +80,15 @@
 			<singular>парке</singular>
 		</prepositional>
 	</noun>
+	<adjective>
+		<dictionary-form>громкий</dictionary-form>
+		<translation>loud</translation>
+		<nominative>
+			<masculine>громкий</masculine>
+			<feminine>громкая</feminine>
+		</nominative>
+		<accusative>
+			<feminine>громкую</feminine>
+		</accusative>
+	</adjective>
 </dictionary>

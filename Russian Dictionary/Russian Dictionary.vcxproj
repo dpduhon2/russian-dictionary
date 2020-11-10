@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\adjective.cpp" />
     <ClCompile Include="src\menu.cpp" />
     <ClCompile Include="src\noun.cpp" />
     <ClCompile Include="src\verb.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\unicode_io.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\adjective.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\noun.h" />
     <ClInclude Include="src\verb.h" />

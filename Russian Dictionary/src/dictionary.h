@@ -8,6 +8,7 @@
 class XMLNodeUTF8;
 class Noun;
 class Verb;
+class Adjective;
 
 class Dictionary {
 public:
@@ -19,6 +20,7 @@ public:
 
 	Noun& add_noun(const std::wstring& dictionary_form, const std::wstring& translation);
 	Verb& add_verb(const std::wstring& dictionary_form, const std::wstring& translation);
+	Adjective& add_adjective(const std::wstring& dictionary_form, const std::wstring& translation);
 
 	std::vector<Word*> find_words_containing(const std::wstring& word);
 

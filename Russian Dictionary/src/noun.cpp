@@ -169,6 +169,10 @@ Noun::Case::Case(const std::wstring& name_) :
 {}
 
 void Noun::Case::print() const {
+	std::wcout << name << std::endl;
+	std::wcout << '\t' << L"singular: " << singular << std::endl;
+	std::wcout << '\t' << L"plural: " << plural << std::endl;
+
 	return;
 }
 bool Noun::Case::is_empty() const {

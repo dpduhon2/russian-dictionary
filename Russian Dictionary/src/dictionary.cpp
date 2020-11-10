@@ -4,6 +4,7 @@
 #include "unicode_io.h"
 #include "noun.h"
 #include "verb.h"
+#include "adjective.h"
 
 Dictionary::~Dictionary() {
 	for (Word* w : words) {
@@ -28,6 +29,15 @@ Verb& Dictionary::add_verb(const std::wstring& dictionary_form, const std::wstri
 	words.push_back(verb);
 
 	return *verb;
+}
+Adjective& Dictionary::add_adjective(const std::wstring& dictionary_form, const std::wstring& translation) {
+	Adjective* adjective = new Adjective;
+	adjective->dictionary_form = dictionary_form;
+	adjective->translation = translation;
+
+	words.push_back(adjective);
+
+	return *adjective;
 }
 
 std::vector<Word*> Dictionary::find_words_containing(const std::wstring& word) {
@@ -96,6 +106,13 @@ void Dictionary::load_from_file(const std::string& filename) {
 		else if (word.tag == L"verb") {
 			Verb* entry = new Verb;
 			if (entry == nullptr) throw std::exception("Unable to create new verb");
+
+			entry->update_from_xml_node(word);
+			words.push_back(entry);
+		}
+		else if (word.tag == L"adjective") {
+			Adjective* entry = new Adjective;
+			if (entry == nullptr) throw std::exception("Unable to create new adjective");
 
 			entry->update_from_xml_node(word);
 			words.push_back(entry);

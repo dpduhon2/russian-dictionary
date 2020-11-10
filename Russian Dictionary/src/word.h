@@ -9,7 +9,8 @@ class Word {
 public:
 	enum class PartOfSpeech {
 		noun,
-		verb
+		verb,
+		adjective
 	};
 
 	Word(PartOfSpeech pos);

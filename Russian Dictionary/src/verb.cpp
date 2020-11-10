@@ -24,7 +24,9 @@ bool Verb::contains(const std::wstring& word) const {
 	return has_form(word) || translation_contains(word);
 }
 bool Verb::has_form(const std::wstring& word) const {
-	return dictionary_form == word || infinitive == word || present.contains(word);
+	return dictionary_form == word
+		|| infinitive == word
+		|| present.contains(word);
 }
 
 void Verb::update_from_xml_node(const XMLNodeUTF8& node) {
